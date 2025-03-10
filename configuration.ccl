@@ -4,7 +4,7 @@ PROVIDES Conduit
 {
   SCRIPT src/detect.sh
   LANG bash
-  OPTIONS Conduit Conduit_DIR Conduit_INSTALL_DIR Conduit_INC_DIRS Conduit_LIB_DIRS Conduit_LIBS
+  OPTIONS Conduit CONDUIT_DIR CONDUIT_INSTALL_DIR CONDUIT_INC_DIRS CONDUIT_LIB_DIRS CONDUIT_LIBS
 }
 
 # Pass configuration options to build script

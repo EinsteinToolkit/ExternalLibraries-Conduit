@@ -35,9 +35,9 @@ if [ -z "${CONDUIT_BUILD}" -a -z "${CONDUIT_INC_DIRS}" -a -z "${CONDUIT_LIB_DIRS
     find_lib Conduit conduit 1 0.93 "$CONDUIT_LIBS" "conduit/conduit_config.h" "$CONDUIT_DIR"
 
     if [ -n "${CONDUIT_DIR}" ]; then
-        # any libraries needed b/c of ADIOS compile options
+        # any libraries needed b/c of Conduit compile options
         CONDUITCONFFILES="conduit/conduit_relay_config.h"
-        for dir in $CONDUIT_INC_DIRS; do
+        for dir in $CONDUIT_INC_DIRS $CONDUIT_DIR/include; do
             for file in $CONDUITCONFFILES ; do
                 if [ -r "$dir/$file" ]; then
                     CONDUITCONF="$dir/$file"
@@ -48,7 +48,7 @@ if [ -z "${CONDUIT_BUILD}" -a -z "${CONDUIT_INC_DIRS}" -a -z "${CONDUIT_LIB_DIRS
         if [ -z "$CONDUITCONF" ]; then
             echo 'BEGIN MESSAGE'
             echo 'WARNING in Conduit configuration: '
-            echo "None of $CONDUITCONFFILES found in $CONDUIT_INC_DIRS"
+            echo "None of $CONDUITCONFFILES found in $CONDUIT_INC_DIRS $CONDUIT_DIR/include"
             echo "Automatic detection of MPI use not possible"
             echo 'END MESSAGE'
         else
@@ -124,8 +124,8 @@ fi
 echo "BEGIN MAKE_DEFINITION"
 echo "CONDUIT_BUILD          = ${CONDUIT_BUILD}"
 echo "CONDUIT_DIR            = ${CONDUIT_DIR}"
-echo "CONDUIT_INC_DIRS       = ${CONDUIT_INC_DIRS} ${ZLIB_INC_DIRS}"
-echo "CONDUIT_LIB_DIRS       = ${CONDUIT_LIB_DIRS} ${ZLIB_LIB_DIRS}"
+echo "CONDUIT_INC_DIRS       = ${CONDUIT_INC_DIRS} ${HDF5_INC_DIRS} ${SILO_INC_DIRS} ${ZLIB_INC_DIRS}"
+echo "CONDUIT_LIB_DIRS       = ${CONDUIT_LIB_DIRS} ${HDF5_LIB_DIRS} ${SILO_LIB_DIRS} ${ZLIB_LIB_DIRS}"
 echo "CONDUIT_LIBS           = ${CONDUIT_LIBS}"
 echo "CONDUIT_INSTALL_DIR    = ${CONDUIT_INSTALL_DIR}"
 echo "END MAKE_DEFINITION"
