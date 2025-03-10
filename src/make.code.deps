@@ -1,0 +1,12 @@
+# Main make.code.deps file for thorn Conduit
+
+export Conduit_INSTALL_DIR
+export CMAKE_DIR
+export HAVE_CAPABILITY_MPI
+
+$(CCTK_TARGET) $(OBJS) $(SRCS:%=%.d): $(SCRATCH_BUILD)/done/$(THORN)
+
+ifneq ($(Conduit_BUILD),)
+$(SCRATCH_BUILD)/done/$(THORN): $(SRCDIR)/build.sh
+	+$(SRCDIR)/build.sh
+endif

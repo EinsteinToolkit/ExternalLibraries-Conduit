@@ -1,0 +1,17 @@
+Cactus Code Thorn Conduit
+Author(s)    : Erik Schnetter
+Maintainer(s): Cactus team
+Licence      : Apache-2.0 license 
+--------------------------------------------------------------------------
+
+1. Purpose
+
+Distribute the Conduit library; see https://github.com/LLNL/conduit
+
+Conduit: Simplified Data Exchange for HPC Simulations
+
+Conduit is an open source project from Lawrence Livermore National
+Laboratory that provides an intuitive model for describing
+hierarchical scientific data in C++, C, Fortran, and Python. It is
+used for data coupling between packages in-core, serialization, and
+I/O tasks.

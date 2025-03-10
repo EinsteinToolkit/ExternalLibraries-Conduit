@@ -1,0 +1,18 @@
+# Configuration definitions for thorn Conduit
+
+PROVIDES Conduit
+{
+  SCRIPT src/detect.sh
+  LANG bash
+  OPTIONS Conduit Conduit_DIR Conduit_INSTALL_DIR Conduit_INC_DIRS Conduit_LIB_DIRS Conduit_LIBS
+}
+
+# Pass configuration options to build script
+REQUIRES Conduit
+
+# These requirements could be made optional
+REQUIRES HDF5 Silo zlib
+
+OPTIONAL MPI CMake
+{
+}
