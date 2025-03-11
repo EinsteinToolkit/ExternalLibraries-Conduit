@@ -25,14 +25,14 @@ fi
 # Decide which libraries to link with
 ################################################################################
 
-CONDUIT_REQ_LIBS="conduit_relayconduit_blueprint conduit"
+CONDUIT_REQ_LIBS="conduit_relay conduit_blueprint conduit"
 CONDUIT_MPI_LIBS="conduit_relay_mpi_io conduit_relay_mpi conduit_blueprint_mpi"
 
 # Set up names of the libraries based on configuration variables. Also
 # assign default values to variables.
 # Try to find the library if build isn't explicitly requested
 if [ -z "${CONDUIT_BUILD}" -a -z "${CONDUIT_INC_DIRS}" -a -z "${CONDUIT_LIB_DIRS}" -a -z "${CONDUIT_LIBS}" ]; then
-    find_lib Conduit conduit 1 0.93 "$CONDUIT_LIBS" "conduit/conduit_config.h" "$CONDUIT_DIR"
+    find_lib Conduit conduit 1 0.93 "$CONDUIT_REQ_LIBS" "conduit/conduit_config.h" "$CONDUIT_DIR"
 
     if [ -n "${CONDUIT_DIR}" ]; then
         # any libraries needed b/c of Conduit compile options
@@ -52,6 +52,7 @@ if [ -z "${CONDUIT_BUILD}" -a -z "${CONDUIT_INC_DIRS}" -a -z "${CONDUIT_LIB_DIRS
             echo "Automatic detection of MPI use not possible"
             echo 'END MESSAGE'
         else
+            CONDUIT_LIBS="$CONDUIT_REQ_LIBS"
             # Check whether we have to link with MPI
             if grep -qe '^#define CONDUIT_RELAY_MPI_ENABLED' "$CONDUITCONF" 2> /dev/null; then
                 test_mpi=0
@@ -59,7 +60,7 @@ if [ -z "${CONDUIT_BUILD}" -a -z "${CONDUIT_INC_DIRS}" -a -z "${CONDUIT_LIB_DIRS
                 test_mpi=1
             fi
             if [ $test_mpi -eq 0 ]; then
-                CONDUIT_LIBS="$CONDUIT_MPI_LIBS $CONDUIT_LIBS"
+                CONDUIT_LIBS="$CONDUIT_MPI_LIBS $CONDUIT_REQ_LIBS"
             fi
         fi
     fi
