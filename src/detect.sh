@@ -28,6 +28,15 @@ fi
 CONDUIT_REQ_LIBS="conduit_relay conduit_blueprint conduit"
 CONDUIT_MPI_LIBS="conduit_relay_mpi_io conduit_relay_mpi conduit_blueprint_mpi"
 
+# The Conduit libraries have interdependencies (e.g. conduit_blueprint_mpi
+# needs symbols from conduit_relay_mpi) that a single left-to-right pass of a
+# non-grouping linker cannot resolve regardless of ordering, so the final
+# CONDUIT_LIBS is wrapped in --start-group/--end-group below. The extra
+# leading "-" makes these raw linker flags survive Cactus's "-l"-prefixing
+# of LIBS-style variables unmangled.
+CONDUIT_GROUP_BEGIN="-Wl,--start-group"
+CONDUIT_GROUP_END="-Wl,--end-group"
+
 # Set up names of the libraries based on configuration variables. Also
 # assign default values to variables.
 # Try to find the library if build isn't explicitly requested
@@ -52,7 +61,7 @@ if [ -z "${CONDUIT_BUILD}" -a -z "${CONDUIT_INC_DIRS}" -a -z "${CONDUIT_LIB_DIRS
             echo "Automatic detection of MPI use not possible"
             echo 'END MESSAGE'
         else
-            CONDUIT_LIBS="$CONDUIT_REQ_LIBS"
+            CONDUIT_LIBS="$CONDUIT_GROUP_BEGIN $CONDUIT_REQ_LIBS $CONDUIT_GROUP_END"
             # Check whether we have to link with MPI
             if grep -qe '^#define CONDUIT_RELAY_MPI_ENABLED' "$CONDUITCONF" 2> /dev/null; then
                 test_mpi=0
@@ -60,7 +69,7 @@ if [ -z "${CONDUIT_BUILD}" -a -z "${CONDUIT_INC_DIRS}" -a -z "${CONDUIT_LIB_DIRS
                 test_mpi=1
             fi
             if [ $test_mpi -eq 0 ]; then
-                CONDUIT_LIBS="$CONDUIT_MPI_LIBS $CONDUIT_REQ_LIBS"
+                CONDUIT_LIBS="$CONDUIT_GROUP_BEGIN $CONDUIT_MPI_LIBS $CONDUIT_REQ_LIBS $CONDUIT_GROUP_END"
             fi
         fi
     fi
@@ -95,6 +104,7 @@ if [ -n "$CONDUIT_BUILD" -o -z "${CONDUIT_DIR}" ]; then
     if [ -n "${MPI_DIR+set}" ]; then
         CONDUIT_LIBS="${CONDUIT_MPI_LIBS} ${CONDUIT_LIBS}"
     fi
+    CONDUIT_LIBS="$CONDUIT_GROUP_BEGIN $CONDUIT_LIBS $CONDUIT_GROUP_END"
 else
     DONE_FILE=${SCRATCH_BUILD}/done/${THORN}
     if [ ! -e ${DONE_FILE} ]; then

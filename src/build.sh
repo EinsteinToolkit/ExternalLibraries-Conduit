@@ -15,6 +15,8 @@ set -e                          # Abort on errors
 # Set locations
 THORN=Conduit
 NAME=conduit-v0.9.3-src-with-blt
+# The archive's internal top-level directory does not match its filename
+SRCDIRNAME=conduit-v0.9.3
 SRCDIR="$(dirname $0)"
 BUILD_DIR=${SCRATCH_BUILD}/build/${THORN}
 if [ -z "${CONDUIT_INSTALL_DIR}" ]; then
@@ -40,7 +42,7 @@ pushd ${BUILD_DIR}
 ${TAR?} xf ${SRCDIR}/../dist/${NAME}.tar
 
 echo "Conduit: Configuring..."
-cd ${NAME}
+cd ${SRCDIRNAME}
 
 if [ "${CCTK_DEBUG_MODE}" = yes ]; then
     CONDUIT_BUILD_TYPE=Debug
@@ -59,6 +61,8 @@ fi
 mkdir build
 cd build
 CMAKE_OPTIONS=(
+    -DCMAKE_BUILD_TYPE=${CONDUIT_BUILD_TYPE}
+    -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
     -DBUILD_SHARED_LIBS=OFF
     -DCONDUIT_ENABLE_TESTS=OFF
     -DENABLE_COVERAGE=OFF
@@ -75,7 +79,7 @@ CMAKE_OPTIONS=(
     -DSILO_DIR=${SILO_DIR}
     -DZLIB_DIR=${ZLIB_DIR}
 )
-${CMAKE_DIR:+${CMAKE_DIR}/bin/}cmake ${CMAKE_OPTIONS[@]}
+${CMAKE_DIR:+${CMAKE_DIR}/bin/}cmake ${CMAKE_OPTIONS[@]} ../src
 
 echo "Conduit: Building..."
 ${MAKE}
