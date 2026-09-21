@@ -14,9 +14,8 @@ set -e                          # Abort on errors
 
 # Set locations
 THORN=Conduit
-NAME=conduit-v0.9.3-src-with-blt
-# The archive's internal top-level directory does not match its filename
-SRCDIRNAME=conduit-v0.9.3
+TARNAME=conduit-v0.9.8-src-with-blt
+NAME=conduit-v0.9.8
 SRCDIR="$(dirname $0)"
 BUILD_DIR=${SCRATCH_BUILD}/build/${THORN}
 if [ -z "${CONDUIT_INSTALL_DIR}" ]; then
@@ -39,10 +38,10 @@ mkdir ${BUILD_DIR} ${INSTALL_DIR}
 # Build core library
 echo "Conduit: Unpacking archive..."
 pushd ${BUILD_DIR}
-${TAR?} xf ${SRCDIR}/../dist/${NAME}.tar
+${TAR?} xf ${SRCDIR}/../dist/${TARNAME}.tar
 
 echo "Conduit: Configuring..."
-cd ${SRCDIRNAME}
+cd ${NAME}
 
 if [ "${CCTK_DEBUG_MODE}" = yes ]; then
     CONDUIT_BUILD_TYPE=Debug
